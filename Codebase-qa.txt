@@ -1,0 +1,23 @@
+tgp_v1_Zf8nF398TJ5loTz9x6AEBBkY5Ld-XqXP_TqTTHctMwk
+
+
+
+
+http://127.0.0.1:7860
+
+
+
+
+
+
+backend:
+pip install fastapi uvicorn[standard] python-multipart
+>> uvicorn backend.main:app --reload --port 8000
+
+
+
+
+frontend :
+cd frontend
+npm install
+npm run dev
