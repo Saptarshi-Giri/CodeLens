@@ -51,65 +51,62 @@ Built on **Retrieval-Augmented Generation (RAG)**, CodeLens chunks your codebase
 ---
 
 ## Architecture
-
-GitHub URL
+Input: GitHub URL
 │
 ▼
-┌─────────────┐     ┌──────────────┐     ┌─────────────────┐
-│ github_     │────▶│ code_        │────▶│ embedder.py     │
-│ loader.py   │     │ chunker.py   │     │ (MiniLM-L6-v2)  │
-│ Clone repo  │     │ Split files  │     │ Generate vectors │
-└─────────────┘     └──────────────┘     └────────┬────────┘
+[github_loader.py] ──► [code_chunker.py] ──► [embedder.py]
+Clone repository        Split into chunks     Generate vectors
 │
 ▼
-┌─────────────────┐
-│   ChromaDB      │
-│  Vector Store   │
-└────────┬────────┘
+[ChromaDB]
+Vector Store
 │
-User Question ────▶ Embed Query ────▶ Semantic Search
+User Question ──► Embed Query ──► Semantic Search ────┘
 │
 ▼
 Top-K Code Chunks
 │
 ▼
-┌──────────────────────────┐
-│  Groq — LLaMA 3.3 70B   │
-│  RAG Prompt + Answer     │
-└──────────────────────────┘
+[Groq — LLaMA 3.3 70B]
+RAG Prompt + Answer
 
 ---
 
 ## Project Structure
-
-codebase-qa/
+CodeLens/
+│
 ├── backend/
-│   ├── main.py               # FastAPI server — all API endpoints
+│   ├── main.py
 │   └── requirements.txt
+│
 ├── frontend/
 │   ├── src/
-│   │   ├── App.jsx           # Root component, state management
-│   │   ├── index.css         # Global styles, CSS variables
-│   │   ├── main.jsx          # React entry point
+│   │   ├── App.jsx
+│   │   ├── index.css
+│   │   ├── main.jsx
 │   │   └── components/
-│   │       ├── TopBar.jsx    # Header, repo input, theme toggle
-│   │       ├── Sidebar.jsx   # Repo list, stats, file explorer, download
-│   │       ├── ChatPanel.jsx # Q&A chat interface
-│   │       └── LoaderModal.jsx # Repo loading progress modal
+│   │       ├── TopBar.jsx
+│   │       ├── Sidebar.jsx
+│   │       ├── ChatPanel.jsx
+│   │       └── LoaderModal.jsx
 │   ├── index.html
 │   ├── vite.config.js
 │   └── package.json
+│
 ├── ingest/
-│   ├── github_loader.py      # Clone repo, collect code files
-│   ├── code_chunker.py       # Language-aware code splitting
-│   ├── embedder.py           # Generate and store embeddings
-│   └── model.py              # Shared embedding model instance
+│   ├── github_loader.py
+│   ├── code_chunker.py
+│   ├── embedder.py
+│   └── model.py
+│
 ├── retrieval/
-│   ├── vector_store.py       # ChromaDB client and collection management
-│   └── searcher.py           # Semantic search over embeddings
+│   ├── vector_store.py
+│   └── searcher.py
+│
 ├── llm/
-│   └── qa_chain.py           # Groq LLM call with RAG prompt
-├── .env                      # API keys (not committed)
+│   └── qa_chain.py
+│
+├── .env
 ├── .gitignore
 ├── requirements.txt
 └── README.md
