@@ -51,65 +51,55 @@ Built on **Retrieval-Augmented Generation (RAG)**, CodeLens chunks your codebase
 ---
 
 ## Architecture
-Input: GitHub URL
-│
-▼
-[github_loader.py] ──► [code_chunker.py] ──► [embedder.py]
-Clone repository        Split into chunks     Generate vectors
-│
-▼
-[ChromaDB]
-Vector Store
-│
-User Question ──► Embed Query ──► Semantic Search ────┘
-│
-▼
-Top-K Code Chunks
-│
-▼
-[Groq — LLaMA 3.3 70B]
-RAG Prompt + Answer
+
+| Step | Component | Description |
+|------|-----------|-------------|
+| 1 | `github_loader.py` | Clones the repository and collects all code files |
+| 2 | `code_chunker.py` | Splits files into meaningful chunks by language |
+| 3 | `embedder.py` | Converts chunks into vector embeddings |
+| 4 | `ChromaDB` | Stores and indexes all embeddings |
+| 5 | `searcher.py` | Embeds the user query and retrieves top-k chunks |
+| 6 | `qa_chain.py` | Sends chunks + question to Groq LLaMA 3.3 70B |
+| 7 | Response | Returns explanation, bug detection, and suggestions |
+
+**Flow:** `GitHub URL` → `Clone` → `Chunk` → `Embed` → `Store` → `Query` → `Retrieve` → `LLM` → `Answer`
 
 ---
 
 ## Project Structure
+
+```
 CodeLens/
-│
 ├── backend/
 │   ├── main.py
 │   └── requirements.txt
-│
 ├── frontend/
-│   ├── src/
-│   │   ├── App.jsx
-│   │   ├── index.css
-│   │   ├── main.jsx
-│   │   └── components/
-│   │       ├── TopBar.jsx
-│   │       ├── Sidebar.jsx
-│   │       ├── ChatPanel.jsx
-│   │       └── LoaderModal.jsx
 │   ├── index.html
 │   ├── vite.config.js
-│   └── package.json
-│
+│   ├── package.json
+│   └── src/
+│       ├── App.jsx
+│       ├── index.css
+│       ├── main.jsx
+│       └── components/
+│           ├── TopBar.jsx
+│           ├── Sidebar.jsx
+│           ├── ChatPanel.jsx
+│           └── LoaderModal.jsx
 ├── ingest/
 │   ├── github_loader.py
 │   ├── code_chunker.py
 │   ├── embedder.py
 │   └── model.py
-│
 ├── retrieval/
 │   ├── vector_store.py
 │   └── searcher.py
-│
 ├── llm/
 │   └── qa_chain.py
-│
-├── .env
 ├── .gitignore
 ├── requirements.txt
 └── README.md
+
 
 ---
 
